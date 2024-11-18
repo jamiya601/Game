@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public class Room {
 	private String description;
+	private boolean lock;
+	private String name;
 	
 	private Room east;
 	private Room west;
@@ -21,6 +23,14 @@ public class Room {
 	
 	public String toString() {
 		return description;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String setName() {
+		return name;
 	}
 	
 	public void addExit(char dir, Room r) {
@@ -68,6 +78,15 @@ public class Room {
 	public Item removeItem(String name) {
 		return items.remove(name);
 	}
+	
+	public boolean getLock() {
+		return lock;
+	}
+	
+	public void setLock(boolean l) {
+		lock = l;
+	}
+}
 
 	
-}
+

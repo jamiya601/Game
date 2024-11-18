@@ -6,7 +6,7 @@ public class Item {
 	
 	public Item(String d) {
 		description = d;	
-	}
+	} 
 	
 	public String getName() {
 		return name;
@@ -26,6 +26,14 @@ public class Item {
 	
 	public String toString() {
 		return name;
+	}
+	
+	public void open() {
+		Game.print("You can't open that!");
+	}
+	
+	public void use() {
+		Game.print("You can't use that!");
 	}
 
 }
