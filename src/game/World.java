@@ -15,6 +15,8 @@ public class World {
 		Item broom = new Item("A broom");
 		Combination combination = new Combination();
 		Safe safe = new Safe();
+		Puppy puppy = new Puppy("puppy", "An adorable puppy!");
+		Cat cat = new Cat("cat", "Mr. Whiskers!");
 		
 		key.setName("key");
 		waterCan.setName("watercan");
@@ -40,6 +42,9 @@ public class World {
 		attic.addItem("combination", combination);
 		patio.addItem("flash drive", flashDrive);
 		patio.addItem("key", key);
+		
+		livingRoom.addNPC("puppy", puppy);
+		bedroom.addNPC("cat", cat);
 		
 		return livingRoom;	
 	}

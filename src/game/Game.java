@@ -1,16 +1,44 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Game {
 	
 	public static List<Item> inventory = new ArrayList<>();
 	public static Room currentRoom;
+	public static HashMap<String, String> descriptions = new HashMap<String, String>();
+	public static HashMap<String, Room> roomObjects = new HashMap<String, Room>();
+	public static Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
+		Game game = new Game();
+		game.loadDescriptions("Descriptions.txt");
+		
+		for(String room : game.descriptions.keySet()) {
+			System.out.println(room + ": " + game.descriptions.get(room));
+		}
 		runGame();
+	}
+	
+	public void loadDescriptions(String file) {
+		try {
+			Scanner input = new Scanner(new File(file));
+			while(input.hasNextLine()) {
+				Thread.sleep(1000);
+				String line = input.nextLine();
+				System.out.println(line);
+			}
+			input.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found!");
+		} catch (InterruptedException ex) {
+			System.out.println("File interrupted!");
+		}
 	}
 	
 	public static void print(Object obj) {
@@ -32,7 +60,6 @@ public class Game {
 	
 	public static void runGame() {
 		Room currentRoom = World.buildWorld();
-		Scanner input = new Scanner(System.in);
 		
 		Item key = new Item("A key, to unlock an item.");
 		currentRoom.addItem("key", key);
@@ -41,7 +68,7 @@ public class Game {
 		do {
 			System.out.println(currentRoom);
 			System.out.print("Where do you want to go? ");
-			command = input.nextLine();
+			command = scan.nextLine();
 			String[] words = command.split(" ");
 			
 			switch(words[0]) {
@@ -102,6 +129,21 @@ public class Game {
 				}
 				break;
 				
+			case "talk":
+				if(words.length == 2) {
+					String name = words[1];
+					NPC npc = currentRoom.getNPC(name);
+					if(npc != null) {
+						npc.talk();
+					} else {
+						System.out.println("Name doesn't exist");
+					}
+				
+				} else {
+					System.out.println("Who?");
+				}
+				break;
+				
 			case "i": // checks if inventory is empty, if not, prints out items in your inventory
 				if(command.equals("i")) {
 					if(inventory.isEmpty()) {
@@ -133,14 +175,14 @@ public class Game {
 					} else {
 						System.out.println(name + " is not here or in your inventory.");
 					}
-				}	
+				}
 			default:
 				System.out.println("Invalid input");
 			}
 			
 		} while(!command.equals("x"));
 		
-		input.close();		
+		scan.close();		
 	}
 	
 }

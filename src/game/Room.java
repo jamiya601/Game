@@ -3,7 +3,6 @@ package game;
 import java.util.HashMap;
 
 public class Room {
-	private String description;
 	private boolean lock;
 	private String name;
 	
@@ -15,13 +14,16 @@ public class Room {
 	private Room down;
 	
 	private HashMap<String, Item> items;
+	private HashMap<String, NPC> npcs = new HashMap<>();
 	
-	public Room(String desc) {
-		description = desc;
+	public Room(String name) {
+		this.name = name;
 		items = new HashMap<>();
 	}
 	
+	@Override
 	public String toString() {
+		String description = Game.descriptions.get(name);
 		return description;
 	}
 	
@@ -29,8 +31,8 @@ public class Room {
 		return name;
 	}
 	
-	public String setName() {
-		return name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public void addExit(char dir, Room r) {
@@ -86,7 +88,21 @@ public class Room {
 	public void setLock(boolean l) {
 		lock = l;
 	}
+	
+	public void addNPC(String name, NPC npc) {
+		npcs.put(name, npc);
+	}
+	
+	public NPC getNPC(String name) {
+		return npcs.get(name);
+	}
+	
+	public NPC removeNPC(String name) {
+		return npcs.remove(name);
+	}
 }
+
+
 
 	
 
