@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
 
 public class Game {
 	
@@ -14,6 +19,7 @@ public class Game {
 	public static HashMap<String, String> descriptions = new HashMap<String, String>();
 	public static HashMap<String, Room> roomObjects = new HashMap<String, Room>();
 	public static Scanner scan = new Scanner(System.in);
+	
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -41,6 +47,44 @@ public class Game {
 		}
 	}
 	
+	public static void saveGame(String fileName) {
+		File f = new File(fileName);
+		try { 
+			FileOutputStream fos = new FileOutputStream(f);
+			ObjectOutputStream stream = new ObjectOutputStream(fos); 
+			stream.writeObject(currentRoom);
+			stream.writeObject(inventory);
+			stream.writeObject(roomObjects);
+			stream.close();
+			System.out.println("Game saved to " + fileName);
+		} catch (FileNotFoundException e) {
+			System.out.println("File: " + fileName + " not found");
+			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("Error");
+		}
+	}
+	
+	public static void loadGame(String fileName) {
+		File f = new File(fileName);
+		try {
+			FileInputStream fis = new FileInputStream(f);
+			ObjectInputStream stream = new ObjectInputStream(fis);
+			currentRoom = (Room) stream.readObject();
+			inventory = (List<Item>) stream.readObject();
+			roomObjects = (HashMap<String, Room>) stream.readObject();
+			stream.close();
+			System.out.println("Game successfully loaded: " + fileName);
+		} catch (FileNotFoundException e) {
+			System.out.println("File: " + fileName + " not found.");
+			System.exit(0);
+		} catch (IOException ex) {
+			System.out.println("Error");
+		} catch (ClassNotFoundException ex) {
+			System.out.println("Class not found.");
+		}
+	}
+	
 	public static void print(Object obj) {
 		System.out.println(obj.toString());
 	}
@@ -58,7 +102,7 @@ public class Game {
 		return null;
 	}
 	
-	public static void runGame() {
+	public static void runGame() { // runs the game
 		Room currentRoom = World.buildWorld();
 		
 		Item key = new Item("A key, to unlock an item.");
@@ -89,6 +133,14 @@ public class Game {
 				
 			case "x": // exits game
 				System.out.println("Bye!");
+				break;
+				
+			case "save":
+				saveGame("saveGame.dat");
+				break;
+				
+			case "load":
+				loadGame("saveGame.dat");
 				break;
 				
 			case "use":
@@ -156,6 +208,7 @@ public class Game {
 					}
 					}
 				}
+				break;
 				
 			case "look": // to look at an item in the room
 				if(words.length == 2) { // "look" and item's name
@@ -176,6 +229,8 @@ public class Game {
 						System.out.println(name + " is not here or in your inventory.");
 					}
 				}
+				break;
+				
 			default:
 				System.out.println("Invalid input");
 			}

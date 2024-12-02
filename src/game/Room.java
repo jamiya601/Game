@@ -1,8 +1,9 @@
 package game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Room {
+public class Room implements Serializable {
 	private boolean lock;
 	private String name;
 	
